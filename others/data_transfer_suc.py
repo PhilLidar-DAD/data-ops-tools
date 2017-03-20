@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # Salad VM
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # Import modules
 import os
@@ -64,9 +64,10 @@ for block in listBlocks:
 	else:
 		print block, 'FALSE'
 print '\n'
+
 # Open the SUCs' boundaries
-dsPL1_extent = driver.Open(r'/mnt/aquinas_geostorage/DAD/Working/Jok/Scripts/dataTransferSUC/FP_252_20160812.shp',0)
-dsPL2_extent = driver.Open(r'/mnt/aquinas_geostorage/DAD/Working/Jok/Scripts/dataTransferSUC/PL2_boundary.shp',0)
+dsPL1_extent = driver.Open(r'/mnt/pmsat-nas_geostorage/DAD/Working/Jok/Scripts/dataTransferSUC/FP_252_20160812.shp',0)
+dsPL2_extent = driver.Open(r'/mnt/pmsat-nas_geostorage/DAD/Working/Jok/Scripts/dataTransferSUC/PL2_boundary.shp',0)
 
 # Get the layer of the SUCs' boundaries
 lyrPL1_extent = dsPL1_extent.GetLayer()
