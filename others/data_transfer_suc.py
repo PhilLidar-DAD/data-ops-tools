@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # Salad VM
 
-__version__ = "1.0.2"
+__version__ = "0.2.0"
 
 # Import modules
 import os
@@ -22,13 +22,8 @@ startTime = time.time()
 # Get driver
 driver = ogr.GetDriverByName('ESRI Shapefile')
 
-# Set arguments
-parser = argparse.ArgumentParser(description='Automated data transfer of ASCII and DXF to SUCs')
-parser.add_argument('-t', '--textfile')
-args = parser.parse_args()
-
 # Open the textfile
-f = open(args.textfile,'r')
+f = open("blocks.txt",'r')
 txtBlocks = f.read()
 #listBlocks = str(txtBlocks).split("\n")
 listBlocks = txtBlocks.split("\n")
