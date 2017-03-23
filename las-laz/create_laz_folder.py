@@ -27,4 +27,3 @@ for path,dirs,files in os.walk(cwd,topdown=False):
 		print cmd_mv
 		subprocess.call(cmd_mv,shell=True)
 print "Done!"
-		
