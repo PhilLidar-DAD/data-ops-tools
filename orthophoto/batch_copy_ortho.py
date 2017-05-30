@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # Salad VM
 
-__version__ = "0.2.0"
+__version__ = "0.2.2"
 
 import os
 import gdal
@@ -46,14 +46,15 @@ ctr = 1
 
 for ortho in lstFolder:
     srcOrtho = r"/mnt/pmsat-nas_geostorage/DPC/TERRA/Adjusted_Orthophotos/"
-    curr = os.path.join(srcOrtho,prov,ortho)
-    curr_dream = os.path.join(srcOrtho, "DREAM", prov,ortho)
+    curr = os.path.join(srcOrtho,"DREAM",prov,ortho)
+    curr_lidar1 = os.path.join(srcOrtho, "Phil-LiDAR", prov,ortho)
     
     if os.path.exists(curr):
-        print "Copying Adjusted Orthophotos..."
+        print "Copying Adjusted Orthophotos from DREAM folder..."
         pass
-    elif os.path.exists(curr_dream) :
-        curr = r"/mnt/pmsat-nas_geostorage/DPC/TERRA/Adjusted_Orthophotos/DREAM/"
+    elif os.path.exists(curr_lidar1) :
+        print "Copying Adjusted Orthophotos from Phil-LiDAR folder..."
+        curr = curr_lidar1
     else:
         print "Copying Orthophotos..."
         srcOrtho = r"/mnt/pmsat-nas_geostorage/DPC/TERRA/Photos/"
