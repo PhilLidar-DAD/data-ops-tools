@@ -1,4 +1,4 @@
-__version__ = "0.1"
+__version__ = "0.2"
 __author__ = "Jok Laurente"
 __email__ = "jmelaurente@gmail.com"
 __description__ = "Script for updating LiDAR Coverage Metadata"
@@ -10,10 +10,16 @@ import sys
 import datetime
 import logging
 import csv
+import argparse
 from xlrd import open_workbook
 
-lidar_coverage = r"D:\update_lidar_metadata\LiDAR_Coverage.gdb\lidar_coverage"
-metadata_spreadsheet = r"D:\update_lidar_metadata\FOR METADATA.xlsx"
+parser = argparse.ArgumentParser(description='Script for updating LiDAR Coverage Metadata')
+parser.add_argument('-l','--lidar_coverage')
+parser.add_argument('-m','--metadata_spreadsheet')
+args = parser.parse_args()
+
+lidar_coverage = args.lidar_coverage
+metadata_spreadsheet = args.metadata_spreadsheet
 
 lidar_fields = ["Block_Name", "Sensor", "Base_Used", "Flight_Number", "Mission_Name", "Date_Flown"]
 
@@ -23,7 +29,7 @@ sheet = book.sheet_by_name("DRAFT DAD-FORMAT")
 LOG_FILENAME = "update_lidar_metadata.log"
 logging.basicConfig(filename=LOG_FILENAME,level=logging.ERROR, format='%(asctime)s: %(levelname)s: %(message)s')
 
-csv_file = open("update_lidar_metadata.csv", 'wb')
+csv_file = open("blocks_not_updated.csv", 'wb')
 spamwriter = csv.writer(csv_file, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 spamwriter.writerow(['ID', 'Block', 'Remarks'])
 
@@ -61,6 +67,8 @@ if __name__ == "__main__":
 			mission_name = checkNull(sheet.row(nrow)[9].value)
 			date_flown_dec = checkNull(sheet.row(nrow)[10].value)
 
+			logger.info("Checking if %s exists in LiDAR Coverage" % block_name)
+
 			if date_flown_dec == "NULL":
 				date_flown = "NULL"
 			else:
@@ -70,26 +78,27 @@ if __name__ == "__main__":
 			for row in cursor:
 				if row[0] == block_name:
 					copied = True
-					logger.info("Updating metadata of %s" % block_name)
+					logger.info("%s exists in LiDAR Coverage" % block_name)
+					logger.info("Checking if metadata exists")
 					if row[1]:
-						logger.info("Metadata exists! Appending the values")
+						logger.info("Metadata already exists. Appending the values")
 						row[1] = "{0} | {1}".format(row[1], sensor)
 						row[2] = "{0} | {1}".format(row[2], base_used)
 						row[3] = "{0} | {1}".format(row[3], flight_number)
 						row[4] = "{0} | {1}".format(row[4], mission_name)
 						row[5] = "{0} | {1}".format(row[5], date_flown)
 					else:
-						logger.info("Updating the values")
+						logger.info("Metadata doesn't exists. Updating the values")
 						row[1] = sensor
 						row[2] = base_used
 						row[3] = flight_number
 						row[4] = mission_name
 						row[5] = date_flown
-
 				cursor.updateRow(row)
 		except Exception, e:
 			spamwriter.writerow([str(nrow), block_name, "Error"])
 			logger.exception("Error in updating metadata of %s" % block_name)
 		if not copied:
+			logger.info("%s doesn't exists in LiDAR Coverage" % block_name)
 			spamwriter.writerow([str(nrow), block_name, "Inconsistent name"])
 csv_file.close()
